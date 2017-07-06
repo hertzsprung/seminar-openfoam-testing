@@ -1,3 +1,3 @@
 /*multiplier.C*/
 
-LIB = $(FOAM_USER_LIBBIN)/libMultiplier
+LIB = $(FOAM_USER_LIBBIN)/libmultiplier
