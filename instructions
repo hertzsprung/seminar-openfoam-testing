@@ -1,0 +1,84 @@
+cd test
+foamNewApp testMultiplier
+cp ~/AtmosFOAM/unittest/catch.hpp .
+
+vi testMultiplier.C, replace with
+
+#define CATCH_CONFIG_MAIN                                                       
+#include "catch.hpp"
+
+wmake
+
+testMultiplier
+
+vi Make/files, add
+
+test_multiplication.C
+
+foamNewSource App test_multiplication
+
+vi test_multiplication.C, replace with
+
+#include "catch.hpp"
+#include "multiplier.H"
+
+Approx approx = Approx::custom().epsilon(0.001);                                
+
+TEST_CASE("two_times_three_equals_six")
+{
+    Foam::multiplier m;
+    CHECK(m.timesTwo(3) == approx(6));
+}
+
+edit Make/options
+
+-I../../src/multiplier/lnInclude
+
+-L$(FOAM_USER_LIBBIN) \
+-lmultiplier
+
+wmake, should get fatal error: multiplier.H: No such file
+
+cd src/multiplier
+
+foamNewSource H multiplier
+
+delete most of the guff
+
+wmake
+
+cd test/testMultiplier
+
+wmake, should get error: class Foam::multiplier has no member named timesTwo
+
+vi multiplier.H, add
+
+#include "scalar.H"
+
+public:
+    scalar timesTwo(scalar x);
+    
+wmake, then wmake the test again, ld returned 1 exit status
+
+foamNewSource C multiplier, edit it
+
+vi Make/files to include multiplier.C
+
+wmake, then wmake the test again
+
+vi multiplier.C, add
+
+Foam::scalar Foam::multiplier::timesTwo(Foam::scalar x)
+{
+    return 0;
+}
+
+wmake, wmake the test again, it should compile!
+
+testMultiplier, it should fail with 0.0 == Approx( 6.0 )
+
+make test pass in the simplest possible way!
+
+testMultiplier, it should pass!
+
+then go and add another test to make it fail again!
