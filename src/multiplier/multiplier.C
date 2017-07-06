@@ -35,7 +35,7 @@ Foam::multiplier::multiplier()
 
 Foam::scalar Foam::multiplier::timesTwo(Foam::scalar x)
 {
-    return 6;
+    return 2*x;
 }
 
 // ************************************************************************* //

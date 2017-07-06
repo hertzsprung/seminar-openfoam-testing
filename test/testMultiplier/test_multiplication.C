@@ -39,4 +39,10 @@ TEST_CASE("two_times_three_equals_six")
     CHECK(m.timesTwo(3) == approx(6));
 }
 
+TEST_CASE("two_times_4.5_equals_nine")
+{
+    Foam::multiplier m;
+    CHECK(m.timesTwo(4.5) == approx(9));
+}
+
 // ************************************************************************* //
